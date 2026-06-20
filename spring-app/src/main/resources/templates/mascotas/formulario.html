@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${esEdicion} ? 'Editar mascota' : 'Registrar mascota'">Mascota</title>
+</head>
+<body>
+    <h1 th:text="${esEdicion} ? 'Editar mascota' : 'Registrar mascota'"></h1>
+
+    <ul th:if="${not #lists.isEmpty(errores)}" style="color:red;">
+        <li th:each="error : ${errores}" th:text="${error}"></li>
+    </ul>
+
+    <form method="post"
+          th:action="${esEdicion} ? @{/mascotas/editar/{id}(id=${mascota.id})} : @{/mascotas/crear}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <label for="nombre">Nombre de la mascota</label>
+        <input type="text" id="nombre" name="nombre" required maxlength="100"
+               th:value="${mascota.nombre}">
+
+        <label for="especie">Especie</label>
+        <select id="especie" name="especie" required>
+            <option value="">-- Seleccione --</option>
+            <option th:each="especie : ${T(java.util.List).of('Perro','Gato','Ave','Conejo','Reptil','Otro')}"
+                    th:value="${especie}"
+                    th:text="${especie}"
+                    th:selected="${mascota.especie == especie}">
+            </option>
+        </select>
+
+        <label for="raza">Raza (opcional)</label>
+        <input type="text" id="raza" name="raza" maxlength="100" th:value="${mascota.raza}">
+
+        <label for="fechaNacimiento">Fecha de nacimiento (opcional)</label>
+        <input type="date" id="fechaNacimiento" name="fechaNacimiento" th:value="${mascota.fechaNacimiento}">
+
+        <label for="propietarioNombre">Nombre del propietario</label>
+        <input type="text" id="propietarioNombre" name="propietarioNombre" required maxlength="150"
+               th:value="${mascota.propietarioNombre}">
+
+        <label for="propietarioTelefono">Teléfono del propietario (opcional)</label>
+        <input type="text" id="propietarioTelefono" name="propietarioTelefono" maxlength="20"
+               th:value="${mascota.propietarioTelefono}">
+
+        <button type="submit" th:text="${esEdicion} ? 'Guardar cambios' : 'Registrar'"></button>
+    </form>
+
+    <p><a th:href="@{/mascotas}">&laquo; Volver al listado</a></p>
+</body>
+</html>
