@@ -12,7 +12,7 @@ Se implementó el backend con **PHP 8.2** (obligatorio) como primera tecnología
 Para el acceso a datos en Spring Boot se eligió **JDBC puro** (no Spring Data JPA/Hibernate), de modo que la comparación con PHP/PDO fuera directa: ambas implementaciones controlan explícitamente la apertura de conexión, la preparación de la sentencia y el mapeo fila-a-objeto, sin un ORM intermedio que oculte esos pasos.
 
 ## Alternativas consideradas
-- **ASP.NET Core**: descartado para esta entrega porque el equipo tiene más experiencia previa con la sintaxis de Java y porque Spring Boot permite reutilizar el mismo motor de base de datos (MySQL) sin cambios, mientras que el ecosistema .NET tiende a integrarse de forma más nativa con SQL Server.
+- **ASP.NET Core**: descartado para esta entrega porque el equipo tiene más experiencia previa con la sintaxis de Java y porque Spring Boot permite reutilizar el mismo motor de base de datos (PostgreSQL) sin cambios, mientras que el ecosistema .NET tiende a integrarse de forma más nativa con SQL Server.
 - **Spring Data JPA**: descartado para mantener la comparación de "verbosidad de acceso a datos" justa frente a PDO; JPA habría ocultado demasiados detalles (generación automática de SQL) que sí son visibles y comparables en PDO.
 
 ## Consecuencias
