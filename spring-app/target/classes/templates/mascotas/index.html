@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mascotas - Sistema Veterinario (Spring Boot)</title>
+</head>
+<body>
+    <h1>Mascotas registradas</h1>
+
+    <p>
+        <a th:href="@{/}">&laquo; Volver al panel</a> |
+        <a th:href="@{/mascotas/crear}">+ Registrar nueva mascota</a>
+    </p>
+
+    <p th:if="${param.ok}" style="color:green;">Operación realizada con éxito.</p>
+
+    <table border="1" cellpadding="6" cellspacing="0">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Especie</th>
+            <th>Raza</th>
+            <th>Propietario</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(mascotas)}">
+            <td colspan="6">No hay mascotas registradas todavía.</td>
+        </tr>
+
+        <!-- th:text escapa automaticamente cada valor (equivalente -->
+        <!-- "gratis" del Security::e() manual que usamos en PHP). -->
+        <tr th:each="mascota : ${mascotas}">
+            <td th:text="${mascota.nombre}"></td>
+            <td th:text="${mascota.especie}"></td>
+            <td th:text="${mascota.raza} ?: '-'"></td>
+            <td th:text="${mascota.propietarioNombre}"></td>
+            <td th:text="${mascota.propietarioTelefono} ?: '-'"></td>
+            <td>
+                <a th:href="@{/mascotas/editar/{id}(id=${mascota.id})}">Editar</a>
+                &nbsp;|&nbsp;
+                <form method="post" th:action="@{/mascotas/eliminar/{id}(id=${mascota.id})}"
+                      style="display:inline;" onsubmit="return confirm('¿Eliminar esta mascota?');">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>

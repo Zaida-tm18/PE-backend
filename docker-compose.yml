@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+  php-app:
+    build:
+      context: ./php-app
+      dockerfile: Dockerfile
+    container_name: vet_php_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./php-app:/var/www/html
+    environment:
+      DB_HOST: postgres_db
+      DB_PORT: 5432
+      DB_NAME: veterinaria
+      DB_USER: vet_user
+      DB_PASS: vet_pass_2026
+    depends_on:
+      - postgres_db
+    networks:
+      - vet_network
+
+  postgres_db:
+    image: postgres:16-alpine
+    container_name: vet_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: veterinaria
+      POSTGRES_USER: vet_user
+      POSTGRES_PASSWORD: vet_pass_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - vet_postgres_data:/var/lib/postgresql/data
+      - ./php-app/sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - vet_network
+
+  spring-app:
+    build:
+      context: ./spring-app
+      dockerfile: Dockerfile
+    container_name: vet_spring_app
+    ports:
+      - "8090:8090"
+    environment:
+      DB_USER: vet_user
+      DB_PASS: vet_pass_2026
+    depends_on:
+      - postgres_db
+    networks:
+      - vet_network
+
+  adminer:
+    image: adminer
+    container_name: vet_adminer
+    restart: always
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres_db
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres_db
+    networks:
+      - vet_network
+
+volumes:
+  vet_postgres_data:
+
+networks:
+  vet_network:
+    driver: bridge
